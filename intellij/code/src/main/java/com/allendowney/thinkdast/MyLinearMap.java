@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,10 +37,12 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 		public K getKey() {
 			return key;
 		}
+
 		@Override
 		public V getValue() {
 			return value;
 		}
+
 		@Override
 		public V setValue(V newValue) {
 			value = newValue;
@@ -64,6 +67,11 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 */
 	private Entry findEntry(Object target) {
 		// TODO: FILL THIS IN!
+		for (Entry entry : entries) {
+			if (equals(entry.getKey(), target)) {
+				return entry;
+			}
+		}
 		return null;
 	}
 
@@ -83,7 +91,7 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public boolean containsValue(Object target) {
-		for (Map.Entry<K, V> entry: entries) {
+		for (Map.Entry<K, V> entry : entries) {
 			if (equals(target, entry.getValue())) {
 				return true;
 			}
@@ -99,7 +107,11 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public V get(Object key) {
 		// TODO: FILL THIS IN!
-		return null;
+		Entry entry = findEntry(key);
+		if (entry == null) {
+			return null;
+		}
+		return entry.getValue();
 	}
 
 	@Override
@@ -110,7 +122,7 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public Set<K> keySet() {
 		Set<K> set = new HashSet<K>();
-		for (Entry entry: entries) {
+		for (Entry entry : entries) {
 			set.add(entry.getKey());
 		}
 		return set;
@@ -119,12 +131,20 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public V put(K key, V value) {
 		// TODO: FILL THIS IN!
-		return null;
+		Entry entry = findEntry(key);
+		if (entry == null) {
+			entries.add(new Entry(key, value));
+			return null;
+		} else {
+			V old = entry.getValue();
+			entry.setValue(value);
+			return old;
+		}
 	}
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> map) {
-		for (Map.Entry<? extends K, ? extends V> entry: map.entrySet()) {
+		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
@@ -132,7 +152,14 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public V remove(Object key) {
 		// TODO: FILL THIS IN!
-		return null;
+		Entry entry = findEntry(key);
+		if (entry == null) {
+			return null;
+		} else {
+			V value = entry.getValue();
+			entries.remove(entry);
+			return value;
+		}
 	}
 
 	@Override
@@ -143,7 +170,7 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public Collection<V> values() {
 		Set<V> set = new HashSet<V>();
-		for (Entry entry: entries) {
+		for (Entry entry : entries) {
 			set.add(entry.getValue());
 		}
 		return set;
@@ -159,7 +186,7 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 		Integer value = map.get("Word1");
 		System.out.println(value);
 
-		for (String key: map.keySet()) {
+		for (String key : map.keySet()) {
 			System.out.println(key + ", " + map.get(key));
 		}
 	}
